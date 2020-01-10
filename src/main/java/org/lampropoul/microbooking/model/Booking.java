@@ -15,6 +15,7 @@ public class Booking {
     private String customerSurname;
     private int pax;
 
+    @SuppressWarnings("JpaDataSourceORMInspection")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id", nullable = false, updatable = false)
     private Hotel hotel;
