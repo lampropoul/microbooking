@@ -8,6 +8,7 @@ import org.lampropoul.microbooking.repositories.HotelRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,20 +20,29 @@ public class HotelsController {
     private final HotelRepository hotelRepository;
     private final BookingRepository bookingRepository;
 
-    @GetMapping("/all")
-    public Iterable<Hotel> all() {
-        return hotelRepository.findAll();
+    @GetMapping("/{surname}")
+    public Iterable<Hotel> all(@PathVariable String surname) {
+        return hotelRepository.findAllBySurname(surname);
     }
 
     @GetMapping("/seed")
     public ResponseEntity<Booking> seed() {
         Hotel hotel = new Hotel();
-        hotel.setName("Hyatt");
+        hotel.setName("Hyatt Place");
         hotel.setAddress("56 W 36th St, New York, NY");
+        Hotel hyatt = hotelRepository.save(hotel);
+
         Booking booking = new Booking();
         booking.setCustomerName("Vassilis");
         booking.setCustomerSurname("Lambropoulos");
-        booking.setHotel(hotelRepository.save(hotel));
-        return new ResponseEntity<>(bookingRepository.save(booking), HttpStatus.OK);
+        booking.setHotel(hyatt);
+        bookingRepository.save(booking);
+
+        Booking booking2 = new Booking();
+        booking2.setCustomerName("Konstantina");
+        booking2.setCustomerSurname("Manika");
+        booking2.setHotel(hyatt);
+
+        return new ResponseEntity<>(bookingRepository.save(booking2), HttpStatus.OK);
     }
 }
