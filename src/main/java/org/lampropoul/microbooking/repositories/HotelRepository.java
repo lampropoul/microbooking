@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface HotelRepository extends CrudRepository<Hotel, Long> {
 
-    @Query(value = "select h from Booking b inner join Hotel h on b.hotel.id = h.id where b.customerSurname = ?1")
+    @Query(value = "select distinct h from Booking b inner join Hotel h on b.hotel.id = h.id where b.customerSurname = ?1")
     List<Hotel> findAllBySurname(String surname);
 }

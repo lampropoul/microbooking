@@ -2,7 +2,6 @@ package org.lampropoul.microbooking.web;
 
 import lombok.RequiredArgsConstructor;
 import org.lampropoul.microbooking.model.Hotel;
-import org.lampropoul.microbooking.repositories.BookingRepository;
 import org.lampropoul.microbooking.repositories.HotelRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HotelsController {
 
     private final HotelRepository hotelRepository;
-    private final BookingRepository bookingRepository;
 
     @GetMapping("/{surname}")
     public Iterable<Hotel> all(@PathVariable String surname) {
