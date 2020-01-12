@@ -3,6 +3,8 @@ package org.lampropoul.microbooking.web;
 import lombok.RequiredArgsConstructor;
 import org.lampropoul.microbooking.model.Hotel;
 import org.lampropoul.microbooking.repositories.HotelRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +18,8 @@ public class HotelsController {
     private final HotelRepository hotelRepository;
 
     @GetMapping("/{surname}")
-    public Iterable<Hotel> all(@PathVariable String surname) {
-        return hotelRepository.findAllBySurname(surname);
+    public ResponseEntity<Iterable<Hotel>> all(@PathVariable String surname) {
+        Iterable<Hotel> hotels = hotelRepository.findAllBySurname(surname);
+        return new ResponseEntity<>(hotels, HttpStatus.OK);
     }
 }
