@@ -5,10 +5,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MicrobookingApplicationTests {
@@ -24,8 +24,11 @@ class MicrobookingApplicationTests {
 
     @Test
     void testGetAllBySurname() {
-        ResponseEntity<Iterable> response = restTemplate.exchange(createURLWithPort("/Lambropoulos"), HttpMethod.GET, null, Iterable.class);
-        assertSame(HttpStatus.OK, response.getStatusCode());
+        ResponseEntity<List> response = restTemplate.exchange(createURLWithPort("/Lambropoulos"), HttpMethod.GET, null, List.class);
+        List<LinkedHashMap<String, String>> hotels = (List<LinkedHashMap<String, String>>) response.getBody();
+        assert hotels != null;
+        LinkedHashMap<String, String> hotel = hotels.get(0);
+        assert hotel.get("name") != null;
     }
 
 }

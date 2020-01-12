@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/hotels")
 @RequiredArgsConstructor
@@ -18,8 +20,8 @@ public class HotelsController {
     private final HotelRepository hotelRepository;
 
     @GetMapping("/{surname}")
-    public ResponseEntity<Iterable<Hotel>> all(@PathVariable String surname) {
-        Iterable<Hotel> hotels = hotelRepository.findAllBySurname(surname);
+    public ResponseEntity<List<Hotel>> all(@PathVariable String surname) {
+        List<Hotel> hotels = hotelRepository.findAllBySurname(surname);
         return new ResponseEntity<>(hotels, HttpStatus.OK);
     }
 }
