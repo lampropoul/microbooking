@@ -14,6 +14,8 @@ public class Booking {
     private String customerName;
     private String customerSurname;
     private int pax;
+    private float price;
+    private String currency;
 
     @SuppressWarnings("JpaDataSourceORMInspection")
     @ManyToOne(fetch = FetchType.EAGER)
