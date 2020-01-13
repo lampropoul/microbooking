@@ -32,7 +32,7 @@ class MicrobookingApplicationTests {
 
     @Test
     void testGetAllBookingsForAHotel() {
-        ResponseEntity<List> response = restTemplate.exchange(createURLWithPort("/bookings/Mariott"), HttpMethod.GET, null, List.class);
+        ResponseEntity<List> response = restTemplate.exchange(createURLWithPort("/bookings/byHotelName/Mariott"), HttpMethod.GET, null, List.class);
         List<LinkedHashMap<String, String>> bookings = (List<LinkedHashMap<String, String>>) response.getBody();
         assert bookings != null;
         LinkedHashMap<String, String> booking = bookings.get(0);
