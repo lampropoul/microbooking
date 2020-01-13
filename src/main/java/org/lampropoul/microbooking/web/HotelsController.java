@@ -19,7 +19,7 @@ public class HotelsController {
 
     private final HotelRepository hotelRepository;
 
-    @GetMapping("/{surname}")
+    @GetMapping("/bookingsFor/{surname}")
     public ResponseEntity<List<Hotel>> all(@PathVariable String surname) {
         List<Hotel> hotels = hotelRepository.findAllBySurname(surname);
         return new ResponseEntity<>(hotels, HttpStatus.OK);

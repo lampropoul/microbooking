@@ -14,21 +14,29 @@ import java.util.List;
 class MicrobookingApplicationTests {
 
     final TestRestTemplate restTemplate = new TestRestTemplate();
-    private final String baseURL = "/hotels";
     @LocalServerPort
     private int port;
 
     private String createURLWithPort(String uri) {
-        return "http://localhost:" + port + baseURL + uri;
+        return "http://localhost:" + port + uri;
     }
 
     @Test
-    void testGetAllBySurname() {
-        ResponseEntity<List> response = restTemplate.exchange(createURLWithPort("/Lambropoulos"), HttpMethod.GET, null, List.class);
+    void testGetAllHotelThatASurnameHasBookingsFor() {
+        ResponseEntity<List> response = restTemplate.exchange(createURLWithPort("/hotels/bookingsFor/Lambropoulos"), HttpMethod.GET, null, List.class);
         List<LinkedHashMap<String, String>> hotels = (List<LinkedHashMap<String, String>>) response.getBody();
         assert hotels != null;
         LinkedHashMap<String, String> hotel = hotels.get(0);
-        assert hotel.get("name") != null;
+        assert hotel.get("id") != null;
+    }
+
+    @Test
+    void testGetAllBookingsForAHotel() {
+        ResponseEntity<List> response = restTemplate.exchange(createURLWithPort("/bookings/Mariott"), HttpMethod.GET, null, List.class);
+        List<LinkedHashMap<String, String>> bookings = (List<LinkedHashMap<String, String>>) response.getBody();
+        assert bookings != null;
+        LinkedHashMap<String, String> booking = bookings.get(0);
+        assert booking.get("id") != null;
     }
 
 }
