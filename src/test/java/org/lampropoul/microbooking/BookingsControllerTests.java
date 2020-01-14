@@ -140,7 +140,7 @@ public class BookingsControllerTests {
     @Test
     @Order(8)
     void testDeleteBooking() {
-        long id = 3L;
+        long id = 4L;
         ResponseEntity<Booking> response = restTemplate.exchange(
                 helper.createURLWithPort(port, "/bookings/" + id),
                 HttpMethod.DELETE,
@@ -163,6 +163,18 @@ public class BookingsControllerTests {
 
     @Test
     @Order(10)
+    void testUpdateBookingWithNewHotel() throws IOException {
+        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("existentBookingWithNewHotel.json");
+        ResponseEntity<Booking> response = restTemplate.exchange(
+                helper.createURLWithPort(port, "/bookings"),
+                HttpMethod.PUT,
+                bookingHttpEntity,
+                Booking.class);
+        assertSame(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    @Order(11)
     void testCreateBookingWithNewHotel() throws IOException {
         HttpEntity<Booking> bookingHttpEntity = getRequestEntity("newBookingWithNewHotel.json");
         ResponseEntity<Booking> response = restTemplate.exchange(
@@ -171,6 +183,30 @@ public class BookingsControllerTests {
                 bookingHttpEntity,
                 Booking.class);
         assertSame(HttpStatus.CREATED, response.getStatusCode());
+    }
+
+    @Test
+    @Order(12)
+    void testCreateBookingWithNullHotel() throws IOException {
+        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("newBookingWithNullHotel.json");
+        ResponseEntity<Booking> response = restTemplate.exchange(
+                helper.createURLWithPort(port, "/bookings"),
+                HttpMethod.POST,
+                bookingHttpEntity,
+                Booking.class);
+        assertSame(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    @Order(13)
+    void testUpdateBookingWithNullHotel() throws IOException {
+        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("existentBookingWithNullHotel.json");
+        ResponseEntity<Booking> response = restTemplate.exchange(
+                helper.createURLWithPort(port, "/bookings"),
+                HttpMethod.PUT,
+                bookingHttpEntity,
+                Booking.class);
+        assertSame(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
 }

@@ -1,0 +1,8 @@
+{
+  "id": 3,
+  "customerName": "Vassilis",
+  "customerSurname": "Lambropoulos",
+  "pax": 5,
+  "price": 1000,
+  "currency": "EUR"
+}
