@@ -2,7 +2,9 @@ package org.lampropoul.microbooking.web;
 
 import lombok.RequiredArgsConstructor;
 import org.lampropoul.microbooking.model.Booking;
+import org.lampropoul.microbooking.model.Hotel;
 import org.lampropoul.microbooking.repositories.BookingRepository;
+import org.lampropoul.microbooking.repositories.HotelRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class BookingsController {
 
     private final BookingRepository bookingRepository;
+    private final HotelRepository hotelRepository;
 
     @GetMapping("/all")
     public ResponseEntity<Iterable<Booking>> all() {
@@ -35,6 +38,14 @@ public class BookingsController {
         if (bookingRepository.findById(booking.getId()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
+            Hotel hotel = booking.getHotel();
+            if (hotel == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            if (hotelRepository.findById(hotel.getId()).isEmpty()) {
+                Hotel persistedHotel = hotelRepository.save(hotel);
+                booking.setHotel(persistedHotel);
+            }
             return new ResponseEntity<>(bookingRepository.save(booking), HttpStatus.CREATED);
         }
     }
@@ -42,6 +53,14 @@ public class BookingsController {
     @PutMapping
     public ResponseEntity<Booking> update(@RequestBody Booking booking) {
         if (bookingRepository.findById(booking.getId()).isPresent()) {
+            Hotel hotel = booking.getHotel();
+            if (hotel == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            if (hotelRepository.findById(hotel.getId()).isEmpty()) {
+                Hotel persistedHotel = hotelRepository.save(hotel);
+                booking.setHotel(persistedHotel);
+            }
             return new ResponseEntity<>(bookingRepository.save(booking), HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

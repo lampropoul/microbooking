@@ -92,7 +92,7 @@ public class BookingsControllerTests {
     @Test
     @Order(4)
     void testCreateBooking() throws IOException {
-        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("booking.json");
+        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("newBooking.json");
         ResponseEntity<Booking> response = restTemplate.exchange(
                 helper.createURLWithPort(port, "/bookings"),
                 HttpMethod.POST,
@@ -128,7 +128,7 @@ public class BookingsControllerTests {
     @Test
     @Order(7)
     void testUpdateNonExistentHotel() throws IOException {
-        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("booking.json");
+        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("newBooking.json");
         ResponseEntity<Booking> response = restTemplate.exchange(
                 helper.createURLWithPort(port, "/bookings"),
                 HttpMethod.PUT,
@@ -159,6 +159,18 @@ public class BookingsControllerTests {
                 null,
                 Booking.class);
         assertSame(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    @Order(10)
+    void testCreateBookingWithNewHotel() throws IOException {
+        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("newBookingWithNewHotel.json");
+        ResponseEntity<Booking> response = restTemplate.exchange(
+                helper.createURLWithPort(port, "/bookings"),
+                HttpMethod.POST,
+                bookingHttpEntity,
+                Booking.class);
+        assertSame(HttpStatus.CREATED, response.getStatusCode());
     }
 
 }

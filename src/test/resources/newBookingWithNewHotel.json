@@ -1,0 +1,12 @@
+{
+  "customerName": "Vassilis",
+  "customerSurname": "Lambropoulos",
+  "pax": 5,
+  "price": 1000,
+  "currency": "EUR",
+  "hotel": {
+    "name": "Grand Hyatt",
+    "address": "19 W 129th St, Los Angeles, CA",
+    "rating": 5
+  }
+}

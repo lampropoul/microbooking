@@ -92,7 +92,7 @@ public class HotelsControllerTests {
     @Test
     @Order(4)
     void testCreateHotel() throws IOException {
-        HttpEntity<Hotel> hotelHttpEntity = getRequestEntity("hotel.json");
+        HttpEntity<Hotel> hotelHttpEntity = getRequestEntity("newHotel.json");
         ResponseEntity<Hotel> response = restTemplate.exchange(
                 helper.createURLWithPort(port, "/hotels"),
                 HttpMethod.POST,
@@ -128,7 +128,7 @@ public class HotelsControllerTests {
     @Test
     @Order(7)
     void testUpdateNonExistentHotel() throws IOException {
-        HttpEntity<Hotel> hotelHttpEntity = getRequestEntity("hotel.json");
+        HttpEntity<Hotel> hotelHttpEntity = getRequestEntity("newHotel.json");
         ResponseEntity<Hotel> response = restTemplate.exchange(
                 helper.createURLWithPort(port, "/hotels"),
                 HttpMethod.PUT,
