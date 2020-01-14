@@ -58,9 +58,14 @@ public class HotelsController {
         }
     }
 
-    @GetMapping("/bookingsFor/{surname}")
+    @GetMapping("/withBookingsFor/{surname}")
     public ResponseEntity<List<Hotel>> hotelsThatHaveBookingsForSurname(@PathVariable String surname) {
         List<Hotel> hotels = hotelRepository.findAllBySurname(surname);
         return new ResponseEntity<>(hotels, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/priceAmounts")
+    public ResponseEntity<Float> priceAmounts(@PathVariable Long id) {
+        return new ResponseEntity<>(hotelRepository.calculatePriceAmounts(id), HttpStatus.OK);
     }
 }

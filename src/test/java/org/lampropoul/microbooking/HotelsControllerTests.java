@@ -41,7 +41,7 @@ public class HotelsControllerTests {
     @Order(0)
     void testGetAllHotelThatASurnameHasBookingsFor() {
         ResponseEntity<List> response = restTemplate.exchange(
-                helper.createURLWithPort(port, "/hotels/bookingsFor/Lambropoulos"),
+                helper.createURLWithPort(port, "/hotels/withBookingsFor/Lambropoulos"),
                 HttpMethod.GET,
                 null,
                 List.class);
@@ -159,6 +159,19 @@ public class HotelsControllerTests {
                 null,
                 Hotel.class);
         assertSame(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    @Order(11)
+    void testPriceAmountForHotel() {
+        long id = 2L;
+        ResponseEntity<Float> response = restTemplate.exchange(
+                helper.createURLWithPort(port, "/hotels/" + id + "/priceAmounts"),
+                HttpMethod.GET,
+                null,
+                Float.class);
+        assertSame(HttpStatus.OK, response.getStatusCode());
+        assert 3979.22f == response.getBody();
     }
 
 }
