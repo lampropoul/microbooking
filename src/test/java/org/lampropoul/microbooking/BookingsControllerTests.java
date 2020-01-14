@@ -1,6 +1,5 @@
 package org.lampropoul.microbooking;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -10,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,32 +27,35 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 public class BookingsControllerTests {
 
     final TestRestTemplate restTemplate = new TestRestTemplate();
+    final TestHelper helper = new TestHelper();
     @LocalServerPort
     private int port;
-    private final HttpHeaders httpHeaders = new HttpHeaders();
-    private final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private ResourceLoader resourceLoader;
 
-    private String createURLWithPort(String uri) {
-        return "http://localhost:" + port + uri;
+    private HttpEntity<Booking> getRequestEntity(String resourceFilename) throws IOException {
+        return helper.getRequestEntity(resourceFilename, Booking.class, resourceLoader);
     }
 
-    private <T> HttpEntity<T> getRequestEntity(String resourceFilename, Class<T> classType) throws IOException {
-        Resource resource = resourceLoader.getResource("classpath:" + resourceFilename);
-        T entity = objectMapper.readValue(resource.getFile(), classType);
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        List<MediaType> mediaTypes = new ArrayList<>();
-        mediaTypes.add(MediaType.APPLICATION_JSON);
-        httpHeaders.setAccept(mediaTypes);
-        return new HttpEntity<>(entity, httpHeaders);
+    @Test
+    @Order(0)
+    void testGetAllBookingsForAHotel() {
+        ResponseEntity<List> response = restTemplate.exchange(
+                helper.createURLWithPort(port, "/bookings/byHotelName/Mariott"),
+                HttpMethod.GET,
+                null,
+                List.class);
+        List<LinkedHashMap<String, String>> bookings = (List<LinkedHashMap<String, String>>) response.getBody();
+        assert bookings != null;
+        LinkedHashMap<String, String> booking = bookings.get(0);
+        assert booking.get("id") != null;
     }
 
     @Test
     @Order(1)
     void testGetAll() {
         ResponseEntity<Iterable> response = restTemplate.exchange(
-                createURLWithPort("/bookings/all"),
+                helper.createURLWithPort(port, "/bookings/all"),
                 HttpMethod.GET,
                 null,
                 Iterable.class);
@@ -64,7 +68,7 @@ public class BookingsControllerTests {
     void testGetById() {
         long id = 3L;
         ResponseEntity<Booking> response = restTemplate.exchange(
-                createURLWithPort("/bookings/" + id),
+                helper.createURLWithPort(port, "/bookings/" + id),
                 HttpMethod.GET,
                 null,
                 Booking.class);
@@ -77,7 +81,7 @@ public class BookingsControllerTests {
     void testGetByNonExistentId() {
         long id = 2L;
         ResponseEntity<Booking> response = restTemplate.exchange(
-                createURLWithPort("/bookings/" + id),
+                helper.createURLWithPort(port, "/bookings/" + id),
                 HttpMethod.GET,
                 null,
                 Booking.class);
@@ -88,9 +92,9 @@ public class BookingsControllerTests {
     @Test
     @Order(4)
     void testCreateBooking() throws IOException {
-        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("booking.json", Booking.class);
+        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("booking.json");
         ResponseEntity<Booking> response = restTemplate.exchange(
-                createURLWithPort("/bookings"),
+                helper.createURLWithPort(port, "/bookings"),
                 HttpMethod.POST,
                 bookingHttpEntity,
                 Booking.class);
@@ -100,9 +104,9 @@ public class BookingsControllerTests {
     @Test
     @Order(5)
     void testCreateExistentBooking() throws IOException {
-        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("existentBooking.json", Booking.class);
+        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("existentBooking.json");
         ResponseEntity<Booking> response = restTemplate.exchange(
-                createURLWithPort("/bookings"),
+                helper.createURLWithPort(port, "/bookings"),
                 HttpMethod.POST,
                 bookingHttpEntity,
                 Booking.class);
@@ -112,9 +116,9 @@ public class BookingsControllerTests {
     @Test
     @Order(6)
     void testUpdateBooking() throws IOException {
-        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("existentBooking.json", Booking.class);
+        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("existentBooking.json");
         ResponseEntity<Booking> response = restTemplate.exchange(
-                createURLWithPort("/bookings"),
+                helper.createURLWithPort(port, "/bookings"),
                 HttpMethod.PUT,
                 bookingHttpEntity,
                 Booking.class);
@@ -124,9 +128,9 @@ public class BookingsControllerTests {
     @Test
     @Order(7)
     void testUpdateNonExistentHotel() throws IOException {
-        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("booking.json", Booking.class);
+        HttpEntity<Booking> bookingHttpEntity = getRequestEntity("booking.json");
         ResponseEntity<Booking> response = restTemplate.exchange(
-                createURLWithPort("/bookings"),
+                helper.createURLWithPort(port, "/bookings"),
                 HttpMethod.PUT,
                 bookingHttpEntity,
                 Booking.class);
@@ -138,7 +142,7 @@ public class BookingsControllerTests {
     void testDeleteBooking() {
         long id = 3L;
         ResponseEntity<Booking> response = restTemplate.exchange(
-                createURLWithPort("/bookings/" + id),
+                helper.createURLWithPort(port, "/bookings/" + id),
                 HttpMethod.DELETE,
                 null,
                 Booking.class);
@@ -150,7 +154,7 @@ public class BookingsControllerTests {
     void testDeleteNonExistentBooking() {
         long id = 1L;
         ResponseEntity<Booking> response = restTemplate.exchange(
-                createURLWithPort("/bookings/" + id),
+                helper.createURLWithPort(port, "/bookings/" + id),
                 HttpMethod.DELETE,
                 null,
                 Booking.class);
