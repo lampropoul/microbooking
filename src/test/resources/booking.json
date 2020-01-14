@@ -1,0 +1,13 @@
+{
+  "customerName": "Vassilis",
+  "customerSurname": "Lambropoulos",
+  "pax": 5,
+  "price": 1000,
+  "currency": "EUR",
+  "hotel": {
+    "id": 1,
+    "name": "Hyatt Place",
+    "address": "56 W 36th St, New York, NY",
+    "rating": 4
+  }
+}
