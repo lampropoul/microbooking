@@ -42,7 +42,7 @@ public class HotelsController {
     @PutMapping
     public ResponseEntity<Hotel> update(@RequestBody Hotel hotel) {
         if (hotelRepository.findById(hotel.getId()).isPresent()) {
-            return new ResponseEntity<>(hotelRepository.save(hotel), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(hotelRepository.save(hotel), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

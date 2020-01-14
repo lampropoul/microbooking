@@ -122,7 +122,7 @@ public class HotelsControllerTests {
                 HttpMethod.PUT,
                 hotelHttpEntity,
                 Hotel.class);
-        assertSame(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertSame(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test

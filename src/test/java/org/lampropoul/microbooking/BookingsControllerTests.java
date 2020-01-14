@@ -122,7 +122,7 @@ public class BookingsControllerTests {
                 HttpMethod.PUT,
                 bookingHttpEntity,
                 Booking.class);
-        assertSame(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertSame(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
@@ -170,7 +170,7 @@ public class BookingsControllerTests {
                 HttpMethod.PUT,
                 bookingHttpEntity,
                 Booking.class);
-        assertSame(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertSame(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test

@@ -38,14 +38,7 @@ public class BookingsController {
         if (bookingRepository.findById(booking.getId()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            Hotel hotel = booking.getHotel();
-            if (hotel == null) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            if (hotelRepository.findById(hotel.getId()).isEmpty()) {
-                Hotel persistedHotel = hotelRepository.save(hotel);
-                booking.setHotel(persistedHotel);
-            }
+            if (hotelIsNull(booking)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             return new ResponseEntity<>(bookingRepository.save(booking), HttpStatus.CREATED);
         }
     }
@@ -53,15 +46,8 @@ public class BookingsController {
     @PutMapping
     public ResponseEntity<Booking> update(@RequestBody Booking booking) {
         if (bookingRepository.findById(booking.getId()).isPresent()) {
-            Hotel hotel = booking.getHotel();
-            if (hotel == null) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            if (hotelRepository.findById(hotel.getId()).isEmpty()) {
-                Hotel persistedHotel = hotelRepository.save(hotel);
-                booking.setHotel(persistedHotel);
-            }
-            return new ResponseEntity<>(bookingRepository.save(booking), HttpStatus.NO_CONTENT);
+            if (hotelIsNull(booking)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(bookingRepository.save(booking), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -80,5 +66,17 @@ public class BookingsController {
     @GetMapping("/byHotelName/{hotelName}")
     public ResponseEntity<List<Booking>> getAllBookingsForAHotel(@PathVariable String hotelName) {
         return new ResponseEntity<>(bookingRepository.getAllByHotel(hotelName), HttpStatus.OK);
+    }
+
+    private boolean hotelIsNull(Booking booking) {
+        Hotel hotel = booking.getHotel();
+        if (hotel == null) {
+            return true;
+        }
+        if (hotelRepository.findById(hotel.getId()).isEmpty()) {
+            Hotel persistedHotel = hotelRepository.save(hotel);
+            booking.setHotel(persistedHotel);
+        }
+        return false;
     }
 }
