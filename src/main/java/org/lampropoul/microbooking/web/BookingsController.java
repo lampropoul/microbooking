@@ -23,8 +23,11 @@ public class BookingsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Booking>> byId(@PathVariable Long id) {
-        return new ResponseEntity<>(bookingRepository.findById(id), HttpStatus.OK);
+    public ResponseEntity<Booking> byId(@PathVariable Long id) {
+        Optional<Booking> booking = bookingRepository.findById(id);
+        return booking
+                .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     @PostMapping
