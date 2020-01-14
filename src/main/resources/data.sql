@@ -1,7 +1,6 @@
 INSERT INTO hotel (id, name, address, rating)
-VALUES (1, 'Hyatt Place', '56 W 36th St, New York, NY', 4);
-INSERT INTO hotel (id, name, address, rating)
-VALUES (2, 'Mariott', '56 W 37th St, New York, NY', 5);
+VALUES (1, 'Hyatt Place', '56 W 36th St, New York, NY', 4),
+       (2, 'Mariott', '56 W 37th St, New York, NY', 5);
 
 INSERT INTO booking (id, customer_name, customer_surname, pax, hotel_id, price, currency)
 VALUES (3, 'Vassilis', 'Lambropoulos', 1, 1, 1000, 'USD'),
