@@ -21,6 +21,6 @@ public class Booking {
 
     @SuppressWarnings("JpaDataSourceORMInspection")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "hotel_id", nullable = false, updatable = false)
+    @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
 }
